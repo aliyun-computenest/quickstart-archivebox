@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="计算巢是阿里云开放给企业应用服务商的服务管理平台。服务商能够在计算巢上发布私有化部署服务，为其客户提供云上软件一键部署的能力；同时也支持全托管模式的服务，赋能服务商托管其客户资源。">
+  <title>中文 - Aliyun 计算巢 x ArchiveBox</title>
+
+  <link rel="shortcut icon" href="img/favicon.ico">
+
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+  <link rel="stylesheet" href="css/theme.css">
+  
+
+  
+
+  
+  
+
+  
+    <script src="search/main.js"></script>
+  
+
+  
+
+  <script src="js/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-inner">
+        <div class="logo">
+          <img src="./img/logo-2x.png">
+        </div>
+        <div class="nav-list">
+          <ul>
+          
+              <li><a href="#archivebox">ArchiveBox社区版计算巢部署文档</a></li>
+              
+                  <li><a href="#_1">服务说明</a></li>
+                  
+              
+                  <li><a href="#_2">计费说明</a></li>
+                  
+              
+                  <li><a href="#ram">RAM账号所需权限</a></li>
+                  
+              
+                  <li><a href="#_3">服务实例部署流程</a></li>
+                  
+                      <li class="li-h3"><a href="#_4">部署步骤</a></li>
+                  
+              
+                  <li><a href="#_5">首次使用配置</a></li>
+                  
+                      <li class="li-h3"><a href="#1">1. 保存第一个网页</a></li>
+                  
+                      <li class="li-h3"><a href="#2">2. 命令行保存</a></li>
+                  
+              
+                  <li><a href="#_6">参数说明</a></li>
+                  
+              
+                  <li><a href="#_7">输出说明</a></li>
+                  
+              
+                  <li><a href="#_8">安全与使用说明</a></li>
+                  
+              
+          
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content theme-github">
+      
+      <div class="content-inner">        
+        
+        <h1 id="archivebox">ArchiveBox社区版计算巢部署文档</h1>
+<h2 id="_1">服务说明</h2>
+<p>ArchiveBox 是一款自托管的网页存档与书签保存平台：把网址丢进去，它会永久保存页面的 HTML、PDF、截图与全文文本，支持全文检索、定时抓取与 REST API。本计算巢服务采用单机 ECS 部署，ECS 镜像内已预置 ArchiveBox 与 Docker Compose 运行环境，存档数据全部保存在实例本机。</p>
+<p>服务默认开启登录鉴权，访问入口为实例公网 IP 的 5797 端口。</p>
+<h2 id="_2">计费说明</h2>
+<p>通过此服务模板构建服务不产生费用。用户部署服务实例时，资源费用主要涉及：</p>
+<ul>
+<li>ECS 实例规格</li>
+<li>系统盘容量（模板固定 200 GiB ESSD）</li>
+<li>公网带宽（模板固定 5 Mbps）</li>
+</ul>
+<p>计费方式支持按量付费和包年包月，预估费用会在部署前实时展示。</p>
+<h2 id="ram">RAM账号所需权限</h2>
+<p>若使用 RAM 用户创建服务实例，需要在创建服务实例前为该 RAM 用户添加相应权限。</p>
+<table>
+<thead>
+<tr>
+<th>权限策略名称</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AliyunECSFullAccess</td>
+<td>管理云服务器 ECS 的权限</td>
+</tr>
+<tr>
+<td>AliyunVPCFullAccess</td>
+<td>管理专有网络 VPC 的权限</td>
+</tr>
+<tr>
+<td>AliyunROSFullAccess</td>
+<td>管理资源编排 ROS 的权限</td>
+</tr>
+<tr>
+<td>AliyunComputeNestUserFullAccess</td>
+<td>管理计算巢服务用户侧资源的权限</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_3">服务实例部署流程</h2>
+<h3 id="_4">部署步骤</h3>
+<ol>
+<li>打开计算巢服务实例创建页面，选择部署地域，填写实例规格、实例密码。网络可选择新建 VPC，也可以选择已有 VPC 与交换机。</li>
+</ol>
+<p><a href="https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&amp;ServiceId=service-62cb9e66d49a4a308982">部署链接</a></p>
+<p><img alt="创建服务实例" src="create-instance.png" /></p>
+<ol>
+<li>
+<p>确认询价明细后点击 <strong>下一步：确认订单</strong>，同意服务协议并点击 <strong>立即创建</strong>。</p>
+</li>
+<li>
+<p>等待服务实例部署完成。部署完成后，在服务实例详情页的 <strong>输出</strong> 区域查看 <code>archivebox_5797_url</code> 访问地址和 <code>AdminPassword</code> 管理员密码。服务详情页信息如下：</p>
+</li>
+</ol>
+<p><img alt="服务详情" src="service-detail.png" /></p>
+<ol>
+<li>用浏览器打开 <code>http://&lt;实例公网IP&gt;:5797</code>，使用用户名 <code>admin</code> 与输出中的管理员密码登录。</li>
+</ol>
+<p><img alt="ArchiveBox 登录页" src="app.png" /></p>
+<h2 id="_5">首次使用配置</h2>
+<h3 id="1">1. 保存第一个网页</h3>
+<p>登录后进入 <strong>Snapshots</strong> 页面，点击 <strong>Add</strong>，粘贴目标网址并提交，ArchiveBox 会开始抓取并保存该页面。</p>
+<h3 id="2">2. 命令行保存</h3>
+<p>登录实例后可以通过容器内的 CLI 批量保存：</p>
+<pre><code class="language-bash">docker exec archivebox archivebox add --depth=1 'https://example.com'
+docker exec archivebox archivebox help
+</code></pre>
+<h2 id="_6">参数说明</h2>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VpcOption</td>
+<td>网络类型，新建 VPC 或使用已有 VPC</td>
+<td>NewVPC</td>
+</tr>
+<tr>
+<td>VpcCidrBlock</td>
+<td>新建 VPC 的网段</td>
+<td>192.168.0.0/16</td>
+</tr>
+<tr>
+<td>VSwitchCidrBlock</td>
+<td>新建交换机的网段</td>
+<td>192.168.1.0/24</td>
+</tr>
+<tr>
+<td>EcsInstanceType</td>
+<td>ECS 实例规格</td>
+<td>无</td>
+</tr>
+<tr>
+<td>InstancePassword</td>
+<td>实例登录密码</td>
+<td>无</td>
+</tr>
+<tr>
+<td>PayType</td>
+<td>付费类型</td>
+<td>PostPaid</td>
+</tr>
+<tr>
+<td>ZoneId</td>
+<td>可用区</td>
+<td>无</td>
+</tr>
+<tr>
+<td>VpcId / VSwitchId</td>
+<td>已有 VPC 与交换机 ID（选择已有 VPC 时填写）</td>
+<td>空</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_7">输出说明</h2>
+<table>
+<thead>
+<tr>
+<th>输出</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>archivebox_5797_url</td>
+<td>ArchiveBox 访问地址</td>
+</tr>
+<tr>
+<td>AdminUsername</td>
+<td>管理员用户名（admin）</td>
+</tr>
+<tr>
+<td>AdminPassword</td>
+<td>系统随机生成的管理员密码</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_8">安全与使用说明</h2>
+<ul>
+<li>出厂关闭匿名索引页与匿名快照访问（<code>PUBLIC_INDEX=False</code>、<code>PERMISSIONS=private</code>、<code>PUBLIC_ADD_VIEW=False</code>），未登录只能看到登录页。</li>
+<li>出厂关闭向 archive.org 等外部服务提交存档，所有抓取只在本机完成。</li>
+<li>默认安全模式为 <code>safe-onedomain-nojsreplay</code>，适配纯公网 IP 单域访问，带 JavaScript 的全量交互回放会被中和；静态快照、PDF、截图与全文检索不受影响。</li>
+<li>环境变量优先级高于数据目录下的 <code>ArchiveBox.conf</code>，上述安全项在管理后台里改不动。如需调整，请登录实例编辑 <code>/opt/archivebox/.env</code> 后执行 <code>docker compose up -d</code>。</li>
+<li><code>ADMIN_PASSWORD</code> 只在首次初始化建号时生效；需要改密时执行：</li>
+</ul>
+<p><code>bash
+  docker exec -it archivebox archivebox manage changepassword admin</code></p>
+<ul>
+<li>管理员密码以环境变量方式注入容器，会出现在 <code>docker inspect</code> 输出与进程列表中；实例为单租户独占，仍建议登录后修改密码，并在公共网络下避免长时间保持会话。</li>
+<li>存档数据保存在系统盘 <code>/opt/archivebox/data</code>（含 <code>index.sqlite3</code> 与快照文件），释放服务实例会一并删除。</li>
+</ul>
+        
+      </div>
+
+      <div class="copyrights">© 2009-2022 Aliyun.com 版权所有</div>
+    </div>
+  </div>
+  
+  <!--
+  MkDocs version      : 1.6.1
+  Docs Build Date UTC : 2026-11-05 02:11:51.861545+00:00
+  -->
+</body>
+</html>

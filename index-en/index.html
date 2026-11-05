@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="计算巢是阿里云开放给企业应用服务商的服务管理平台。服务商能够在计算巢上发布私有化部署服务，为其客户提供云上软件一键部署的能力；同时也支持全托管模式的服务，赋能服务商托管其客户资源。">
+  <title>English - Aliyun 计算巢 x ArchiveBox</title>
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+  <link rel="stylesheet" href="../css/theme.css">
+  
+
+  
+
+  
+  
+
+  
+    <script src="../search/main.js"></script>
+  
+
+  
+
+  <script src="../js/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-inner">
+        <div class="logo">
+          <img src="./img/logo-2x.png">
+        </div>
+        <div class="nav-list">
+          <ul>
+          
+              <li><a href="#archivebox-community-edition-on-compute-nest">ArchiveBox Community Edition on Compute Nest</a></li>
+              
+                  <li><a href="#overview">Overview</a></li>
+                  
+              
+                  <li><a href="#billing">Billing</a></li>
+                  
+              
+                  <li><a href="#required-ram-permissions">Required RAM permissions</a></li>
+                  
+              
+                  <li><a href="#deployment">Deployment</a></li>
+                  
+              
+                  <li><a href="#first-use">First use</a></li>
+                  
+              
+                  <li><a href="#parameters">Parameters</a></li>
+                  
+              
+                  <li><a href="#outputs">Outputs</a></li>
+                  
+              
+                  <li><a href="#security-notes">Security notes</a></li>
+                  
+              
+          
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content theme-github">
+      
+      <div class="content-inner">        
+        
+        <h1 id="archivebox-community-edition-on-compute-nest">ArchiveBox Community Edition on Compute Nest</h1>
+<h2 id="overview">Overview</h2>
+<p>ArchiveBox is a self-hosted web archiving and bookmarking platform. Give it a URL and it permanently stores the HTML, PDF, screenshot and full text of the page, with full-text search, scheduled crawling and a REST API. This Compute Nest service deploys a single ECS instance with ArchiveBox and Docker Compose preinstalled. Everything is stored locally.</p>
+<p>Authentication is enabled by default; the service is reachable at port 5797 of the instance public IP.</p>
+<h2 id="billing">Billing</h2>
+<p>The template is free. Deploying an instance incurs charges for:</p>
+<ul>
+<li>ECS instance</li>
+<li>200 GiB ESSD system disk (fixed by the template)</li>
+<li>5 Mbps public bandwidth (fixed by the template)</li>
+</ul>
+<p>Pay-as-you-go and subscription are both supported.</p>
+<h2 id="required-ram-permissions">Required RAM permissions</h2>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AliyunECSFullAccess</td>
+<td>Manage ECS resources</td>
+</tr>
+<tr>
+<td>AliyunVPCFullAccess</td>
+<td>Manage VPC resources</td>
+</tr>
+<tr>
+<td>AliyunROSFullAccess</td>
+<td>Manage ROS stacks</td>
+</tr>
+<tr>
+<td>AliyunComputeNestUserFullAccess</td>
+<td>Manage Compute Nest user resources</td>
+</tr>
+</tbody>
+</table>
+<h2 id="deployment">Deployment</h2>
+<ol>
+<li>Open the instance creation page, choose a region and instance type, and set the instance password.</li>
+</ol>
+<p><a href="https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&amp;ServiceId=service-62cb9e66d49a4a308982">Deploy link</a></p>
+<p><img alt="Create instance" src="../create-instance.png" /></p>
+<ol>
+<li>
+<p>Review the price and click <strong>Create</strong>.</p>
+</li>
+<li>
+<p>After deployment, the <strong>Outputs</strong> section shows <code>archivebox_5797_url</code> and <code>AdminPassword</code>.</p>
+</li>
+</ol>
+<p><img alt="Instance details" src="instance-detail.png" /></p>
+<ol>
+<li>Open <code>http://&lt;public-ip&gt;:5797</code> and sign in as <code>admin</code> with the generated password.</li>
+</ol>
+<p><img alt="ArchiveBox login" src="../app.png" /></p>
+<h2 id="first-use">First use</h2>
+<p>Go to <strong>Snapshots</strong>, click <strong>Add</strong>, paste a URL and submit. ArchiveBox starts archiving the page immediately.</p>
+<p>You can also use the CLI inside the instance:</p>
+<pre><code class="language-bash">docker exec archivebox archivebox add --depth=1 'https://example.com'
+</code></pre>
+<h2 id="parameters">Parameters</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VpcOption</td>
+<td>NewVPC or ExistingVPC</td>
+<td>NewVPC</td>
+</tr>
+<tr>
+<td>VpcCidrBlock</td>
+<td>CIDR of the new VPC</td>
+<td>192.168.0.0/16</td>
+</tr>
+<tr>
+<td>VSwitchCidrBlock</td>
+<td>CIDR of the new vSwitch</td>
+<td>192.168.1.0/24</td>
+</tr>
+<tr>
+<td>EcsInstanceType</td>
+<td>ECS instance type</td>
+<td>none</td>
+</tr>
+<tr>
+<td>InstancePassword</td>
+<td>ECS login password</td>
+<td>none</td>
+</tr>
+<tr>
+<td>PayType</td>
+<td>PostPaid or PrePaid</td>
+<td>PostPaid</td>
+</tr>
+<tr>
+<td>ZoneId</td>
+<td>Availability zone</td>
+<td>none</td>
+</tr>
+<tr>
+<td>VpcId / VSwitchId</td>
+<td>Existing VPC and vSwitch (ExistingVPC only)</td>
+<td>empty</td>
+</tr>
+</tbody>
+</table>
+<h2 id="outputs">Outputs</h2>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>archivebox_5797_url</td>
+<td>ArchiveBox URL</td>
+</tr>
+<tr>
+<td>AdminUsername</td>
+<td>Administrator user name (admin)</td>
+</tr>
+<tr>
+<td>AdminPassword</td>
+<td>Randomly generated administrator password</td>
+</tr>
+</tbody>
+</table>
+<h2 id="security-notes">Security notes</h2>
+<ul>
+<li>Anonymous index and anonymous snapshot access are disabled (<code>PUBLIC_INDEX=False</code>, <code>PERMISSIONS=private</code>, <code>PUBLIC_ADD_VIEW=False</code>).</li>
+<li>Submitting archives to external services such as archive.org is disabled.</li>
+<li><code>SERVER_SECURITY_MODE=safe-onedomain-nojsreplay</code> suits plain public-IP access; full JavaScript replay is neutralised while static snapshots, PDFs, screenshots and full-text search keep working.</li>
+<li>Environment variables override <code>ArchiveBox.conf</code>. To change these settings, edit <code>/opt/archivebox/.env</code> on the instance and run <code>docker compose up -d</code>.</li>
+<li><code>ADMIN_PASSWORD</code> only applies when the account is first created. Change it with <code>docker exec -it archivebox archivebox manage changepassword admin</code>.</li>
+<li>Archives are stored in <code>/opt/archivebox/data</code> on the system disk and are deleted with the instance.</li>
+</ul>
+        
+      </div>
+
+      <div class="copyrights">© 2009-2022 Aliyun.com 版权所有</div>
+    </div>
+  </div>
+  
+  <!--
+  MkDocs version      : 1.6.1
+  Docs Build Date UTC : 2026-11-05 02:11:51.870957+00:00
+  -->
+</body>
+</html>
