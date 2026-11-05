@@ -1,0 +1,6 @@
+site_name: Aliyun 计算巢 x ArchiveBox
+theme:
+  name: aliyuncomputenest
+nav:
+  - 中文: index.md
+  - English: index-en.md
